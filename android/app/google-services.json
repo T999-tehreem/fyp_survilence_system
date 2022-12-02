@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "184242031537",
+    "project_id": "accidentpreventionsystem-509bc",
+    "storage_bucket": "accidentpreventionsystem-509bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184242031537:android:3b517a926a90117081cb90",
+        "android_client_info": {
+          "package_name": "com.example.fyp_survilence_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184242031537-p041por8a83m4gc53uv1scgn9hsglb32.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fyp_survilence_system",
+            "certificate_hash": "6316d897f91654408325471390bc26d658b961db"
+          }
+        },
+        {
+          "client_id": "184242031537-h1j69k9vk2obc331cbc5dkvin7is948d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0OAV0UzKBuGOLtCCg8gcqrWw2TxR-cjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184242031537-h1j69k9vk2obc331cbc5dkvin7is948d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
