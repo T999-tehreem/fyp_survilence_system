@@ -91,7 +91,7 @@ dev_dependencies:
   flutter_ringtone_player: ^3.2.0
   flutter_local_notifications: 9.6.0
   firebase_database:
-
+  syncfusion_flutter_charts:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

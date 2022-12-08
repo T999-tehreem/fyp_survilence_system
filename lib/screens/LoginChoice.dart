@@ -60,7 +60,7 @@ class _LoginChoiceState extends State<LoginChoice> {
                               child: Column(
                                 children: [
                                   CircleAvatar(
-                                  backgroundColor: Color(0xB00B679B),
+                                  backgroundColor: Color(0xb00d4d79),
                             radius: 60,
                             child: CircleAvatar(
                                     backgroundColor: Color(0xff152e57),
@@ -101,7 +101,7 @@ class _LoginChoiceState extends State<LoginChoice> {
                               child: Column(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: Color(0xB00B679B),
+                                    backgroundColor: Color(0xb00d4d79),
                                   radius: 60,
                                   child: CircleAvatar(
                                     backgroundColor: Color(0xff152e57),
@@ -142,7 +142,7 @@ class _LoginChoiceState extends State<LoginChoice> {
                             child: Column(
                               children: [
                                 CircleAvatar(
-                                backgroundColor: Color(0xB00B679B),
+                                backgroundColor: Color(0xb00d4d79),
                             radius: 60,
                             child: CircleAvatar(
                                   backgroundColor: Color(0xff152e57),

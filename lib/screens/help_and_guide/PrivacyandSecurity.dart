@@ -19,12 +19,13 @@ class PrivacyAndSecurityRouteState extends State<PrivacyAndSecurityRoute> {
     return new Scaffold(
       backgroundColor: MyColors.grey_10,
       appBar: AppBar(
-        backgroundColor: Color(0xb00b679b), brightness: Brightness.dark,
+        backgroundColor: Color(0xb00d4d79), brightness: Brightness.dark,
         title: Text("Privacy and Security"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => SettingProfileRoute()));},
+          onPressed: () {
+            Navigator.pop(context);
+            },
         ),
       ),
       body: SingleChildScrollView(

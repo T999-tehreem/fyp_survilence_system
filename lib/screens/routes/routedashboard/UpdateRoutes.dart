@@ -131,7 +131,7 @@ class _UpdateRoutesState extends State<UpdateRoutes> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0.0,
-          centerTitle: true, title: Text('Update Routes'),backgroundColor: Color(0xb00b679b),),
+          centerTitle: true, title: Text('Update Routes'),backgroundColor: Color(0xb00d4d79),),
       body: ModalProgressHUD(
         inAsyncCall: isloading,
         child: Stack(
@@ -142,7 +142,7 @@ class _UpdateRoutesState extends State<UpdateRoutes> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0xb00b679b),Colors.white],
+                    colors: [Color(0xb00d4d79),Colors.white],
                     stops: [0.3, 0],
                   ),
                 )),
@@ -419,7 +419,7 @@ class _UpdateRoutesState extends State<UpdateRoutes> {
                             shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(25.0),
                             ),
-                            color: Color(0xb00b679b),
+                            color: Color(0xff152e57),
                             child: const Text(
                               'Submit',
                               style:

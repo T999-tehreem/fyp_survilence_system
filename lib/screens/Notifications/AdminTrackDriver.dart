@@ -23,6 +23,7 @@ class _AdminTrackDriverState extends State<AdminTrackDriver> {
   PolylinePoints polylinePoints = PolylinePoints();
   String googleAPiKey = 'AIzaSyA-F9moLzfO6nheP9hVOhH5wsRjNo8xr6U';
   GoogleMapController? mapController;
+
   @override
   void initState() {
     super.initState();
@@ -106,7 +107,10 @@ class _AdminTrackDriverState extends State<AdminTrackDriver> {
               ),
             )
           ],*/
-          body: GoogleMap(
+          body:
+          Stack(
+              children: [
+                GoogleMap(
             initialCameraPosition: CameraPosition(
                 target: LatLng(_originLatitude, _originLongitude), zoom: 15),
             myLocationEnabled: true,
@@ -117,8 +121,15 @@ class _AdminTrackDriverState extends State<AdminTrackDriver> {
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),
             polylines: Set<Polyline>.of(polylines.values),
-          )),
-    );
+          ),
+    ]),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xff152e57),
+          onPressed: () { Navigator.pop(context);},
+          child: Icon(Icons.arrow_back, color: Colors.white,),
+        ),
+    ));
   }
 
   void _onMapCreated(GoogleMapController controller) async {

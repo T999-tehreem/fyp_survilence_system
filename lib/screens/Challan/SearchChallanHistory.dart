@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/constants.dart';
-
 import '../chat/DriverChatListforAdmin.dart';
 import '../chat/OfficerChatListforAdmin.dart';
 import 'CompanyChallan.dart';
 import 'DriverChallanHistory.dart';
-
-
 
 class ChallanHistory extends StatefulWidget {
   const ChallanHistory ({Key? key}) : super(key: key);
@@ -31,7 +28,7 @@ class _ChallanHistoryState extends State<ChallanHistory>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xffAFE1AF),
+        backgroundColor: Color(0xb00d4d79),
         title: Text('Challan History', style: TextStyle(fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,

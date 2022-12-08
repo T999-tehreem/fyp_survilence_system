@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
             minWidth: MediaQuery.of(context).size.width * 0.78,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(25.0),),
-            color: const Color(0xb00b679b),
+            color: Color(0xff152e57),
             child: const Text(
               'Login',
               style: TextStyle(color: Colors.white),

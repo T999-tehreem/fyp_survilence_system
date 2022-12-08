@@ -12,13 +12,18 @@ import '../../widgets/widgets.dart';
 import '../admin_dashboard/constants.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
   final String myName;
   final String userName;
+  final String currentU;
   ConversationScreen(
-      {required this.chatRoomId, required this.myName, required this.userName});
+      {required this.chatRoomId, required this.myName, required this.userName,required this.currentU});
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
 }
@@ -94,6 +99,143 @@ class _ConversationScreenState extends State<ConversationScreen> {
       print(imageUrl);
     }
   }
+  String? mtoken = " ";
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  late AndroidNotificationChannel channel;
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging. instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User Granted Permission');
+
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User Granted Provincial Permission');
+
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then(
+            (token) {
+          setState(() {
+            mtoken = token;
+            print("My token is $mtoken");
+          });
+          saveToken(token!);
+        }
+    );
+  }
+
+  void saveToken(String token) async{
+    if(widget.currentU==widget.chatRoomId.split('_')[0]){
+      await FirebaseFirestore.instance.collection("admin").doc(widget.chatRoomId.split('_')[1]).update({
+        'token' : token,
+      });
+    }
+    else{
+      await FirebaseFirestore.instance.collection("admin").doc(widget.chatRoomId.split('_')[1]).update({
+        'token' : token,
+      });
+    }
+  }
+  void listenFCM() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void loadFCM() async {
+    if (!kIsWeb) {
+      channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.high,
+        enableVibration: true,
+      );
+
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      /// Create an Android Notification Channel.
+      ///
+      /// We use this channel in the `AndroidManifest.xml` file to override the
+      /// default FCM channel to enable heads up notifications.
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+
+      /// Update the iOS foreground notification presentation options to allow
+      /// heads up notifications.
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
+  void sendPushMessage(String token, String body, String title) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAApRzQFgg:APA91bGmDfXnC2DXElT_NdxH1NtP5ZETT94Un6Htv2eAzhirZI_mfbRP85ogDTpYs5opt06kjsFxkTx_pMeZxlEw4OBI2r7qHOHTne_XpC6AI0OTokb0YjJSkAHTCaNkTAofnR6ktABD',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'status': 'done',
+              'body' : body,
+              'title': title,
+            },
+
+            "notification": <String, dynamic>{
+              "title": title,
+              "body": body,
+              "android_channel_id": "dbfood"
+            },
+            "to": token,
+          },
+        ),
+      );
+    } catch(e){
+      if (kDebugMode){
+        print("error push notification");
+      }
+    }
+  }
 
   sendMessage() {
     if (messageEditingController.text.isNotEmpty) {
@@ -104,7 +246,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
         "type": "text",
       };
       databaseMethods.addConversationMessage(widget.chatRoomId, messageMap);
-      setState(() {
+      setState(() async{
+        DocumentSnapshot snap = await FirebaseFirestore.instance.collection(
+            "admin").doc('zXQUtMmn7PN4oQIVAbIa2cSYNwi1').get();
+        String token = snap['token'];
+        sendPushMessage(token, messageEditingController.text, widget.userName);
         messageEditingController.text = "";
       });
     }
@@ -113,7 +259,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     super.initState();
-
+    requestPermission();
+    loadFCM();
+    listenFCM();
+    getToken();
     databaseMethods.getConversationMessage(widget.chatRoomId).then((value) {
       setState(() {
         chatMessageStream = value;
@@ -127,7 +276,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.userName),
-        backgroundColor: Color(0xb00b679b),
+        backgroundColor: Color(0xb00d4d79),
           actions: [
             Padding(padding: EdgeInsets.only(right: 12),
           child: IconButton(

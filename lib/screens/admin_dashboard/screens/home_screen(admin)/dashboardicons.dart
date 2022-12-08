@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_survilence_system/screens/Notifications/NotificationListScreen.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/screens/tracking/AdminsideDriverListfortracking.dart';
+import 'package:fyp_survilence_system/screens/admin_dashboard/statistics.dart';
 import 'package:fyp_survilence_system/utils/color.dart';
 import '../../../routes/routedashboard/allRoutesInfo.dart';
 import '../../constants.dart';
@@ -51,9 +53,9 @@ class _DashboardIconsState extends State<DashboardIcons> {
                 },
                 child: iconcard('Routes',Icons.route)),
             GestureDetector(
-              onTap: () => {
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>OfficersTable()))
-              },
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Statistics()))
+                },
               child: iconcard('Statistics',Icons.bar_chart)),
             GestureDetector(
                 onTap: () => {
@@ -73,7 +75,7 @@ class _DashboardIconsState extends State<DashboardIcons> {
                   child: iconcard('Operator',Icons.local_police_outlined)),
               GestureDetector(
                 onTap: () => {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>OfficersTable()))
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllNotifications()))
                 },
                 child: iconcard('Notification',Icons.notifications_active)),
               GestureDetector(

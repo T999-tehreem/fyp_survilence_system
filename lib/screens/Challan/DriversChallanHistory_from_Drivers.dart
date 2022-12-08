@@ -10,14 +10,14 @@ import '../../../../utils/color.dart';
 import '../chat/conversationScreen.dart';
 import 'package:intl/intl.dart';
 
-class DriverChallanScreen_fromDriver extends StatefulWidget {
-  const DriverChallanScreen_fromDriver({Key? key}) : super(key: key);
+class DCS extends StatefulWidget {
+  const DCS({Key? key}) : super(key: key);
 
   @override
-  State<DriverChallanScreen_fromDriver> createState() => _DriverChallanScreen_fromDriverState();
+  State<DCS> createState() => _DCSState();
 }
 
-class _DriverChallanScreen_fromDriverState extends State<DriverChallanScreen_fromDriver> {
+class _DCSState extends State<DCS> {
   Stream<QuerySnapshot<Map<String, dynamic>>> challanInfo = FirebaseFirestore.instance.collection('challan').snapshots();
   String dropdownvalue = 'All Challans';
   String dropdownvalue1 = 'All';

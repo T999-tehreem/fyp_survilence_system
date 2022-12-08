@@ -88,6 +88,20 @@ class LoginScreenOTP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar:AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         backgroundColor: Colors.white,
         body: Center(
         child: SingleChildScrollView(
@@ -175,7 +189,7 @@ class LoginScreenOTP extends StatelessWidget {
                 minWidth: MediaQuery.of(context).size.width * 0.78,
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(25.0),),
-                color: Color(0xb00b679b),
+                color: Color(0xff152e57),
                 child: const Text(
                   'GET OTP',
                   style: TextStyle(color: Colors.white),

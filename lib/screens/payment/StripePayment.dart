@@ -46,7 +46,7 @@ class _StripePaymentState extends State<StripePayment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xb00b679b),
+        backgroundColor: Color(0xb00d4d79),
         title: const Text('Payment'),
       ),
 

@@ -41,6 +41,42 @@ class _OfficerssTableState extends State<OfficersTable> {
   Widget build(BuildContext context) {
     print("im here ");
     return Scaffold(
+      appBar:AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+
+          actions: <Widget>[
+      Padding(
+      padding: EdgeInsets.fromLTRB(30, 15, 10, 10),
+      child:GestureDetector(
+          onTap: () {
+            nav(
+                context,
+                AddTP(
+                ));
+          },
+          child: Align(
+            alignment: Alignment.topRight,
+            child: Chip(
+              backgroundColor: Color(0xff152e57),
+              label: Text(
+                "Add New Operator",
+                style: TextStyle(color: Colors.white,),
+              ),
+            ),
+          ),
+        ),
+      ),] ),
       backgroundColor: bgColor,
       body: isloading
           ? Center(
@@ -50,30 +86,13 @@ class _OfficerssTableState extends State<OfficersTable> {
         padding: EdgeInsets.all(defaultPadding),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(0)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10,),
-            GestureDetector(
-              onTap: () {
-                nav(
-                    context,
-                    AddTP(
-                    ));
-              },
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Chip(
-                  backgroundColor: Color(0xb00b679b),
-                  label: Text(
-                    "Add New Operator",
-                    style: TextStyle(color: Colors.white,),
-                  ),
-                ),
-              ),
-            ),
+
             Text(
               "Operators",
               style: TextStyle(color: Colors.black,

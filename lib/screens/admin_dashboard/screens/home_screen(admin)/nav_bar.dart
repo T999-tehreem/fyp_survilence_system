@@ -13,6 +13,7 @@ import '../../../../services/database.dart';
 import '../../../chat/DriverMessageScreen.dart';
 import '../../../chat/conversationScreen.dart';
 import '../../constants.dart';
+
 class DriverNavbar extends StatefulWidget {
 
   @override
@@ -46,7 +47,7 @@ class _DriverNavbarState extends State<DriverNavbar> {
       MaterialPageRoute(
         builder: (context) =>
             ConversationScreen(
-                chatRoomId: chatRoomId, myName: myName, userName: userName),
+                chatRoomId: chatRoomId, myName: myName, userName: userName,currentU: user!.uid,),
       ),
     );
   }

@@ -32,6 +32,20 @@ class signupState extends State<signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+    leading: IconButton(
+    icon: Icon(
+    Icons.arrow_back,
+    color: Colors.black,
+
+    ),
+    onPressed: () {
+    Navigator.pop(context);
+    },
+    ),
+        ),
       backgroundColor: Colors.white,
         body: SingleChildScrollView(
       child: Center(
@@ -119,7 +133,7 @@ class signupState extends State<signup> {
           minWidth: MediaQuery.of(context).size.width * 0.1,
           shape: RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(25.0),),
-          color: Color(0xb00b679b),
+          color: Color(0xff152e57),
           child: const Text(
             'Submit',
             style: TextStyle(color: Colors.white, fontSize: 15),
@@ -139,11 +153,13 @@ class signupState extends State<signup> {
         decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
             hintText: '$hinttext',  hintStyle: TextStyle(fontSize: 15, color: Colors.black38),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.all(Radius.circular(10),
-                   ),
-        ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.0,
+            ),
+          ),
       ),
     ),);
   }

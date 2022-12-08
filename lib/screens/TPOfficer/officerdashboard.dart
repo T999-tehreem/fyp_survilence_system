@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fyp_survilence_system/model/policeofficer_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fyp_survilence_system/screens/Challan/ChallanGeneration_by_officer.dart';
+import 'package:fyp_survilence_system/screens/Challan/SearchChallanHistory.dart';
+import 'package:fyp_survilence_system/screens/Notifications/NotificationListScreen_forOfficer.dart';
 import 'package:fyp_survilence_system/screens/chat/OfficersMessageScreen.dart';
 import 'package:fyp_survilence_system/screens/help_and_guide/Officer_settings.dart';
 import '../admin_dashboard/constants.dart';
@@ -196,7 +199,7 @@ class _OfficerHomePageState extends State<OfficerHomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
           elevation: 1, brightness: Brightness.dark,
-          backgroundColor: Color(0xb00b679b),
+          backgroundColor: Color(0xb00d4d79),
           title: Text("${loggedInUser.OfficerName}", style: MyText.title(context)!.copyWith(color: Colors.white,)),
           leading: ProfileCard(),
           actions: <Widget>[
@@ -246,8 +249,14 @@ class _OfficerHomePageState extends State<OfficerHomePage> {
                             padding: EdgeInsets.only(left: 8, right: 20),
                             child: IconButton(
                               icon: Icon(Icons.featured_play_list, size: 45, color:Colors.indigo[500]),
-                              onPressed: () => {
-                              },
+                              onPressed: () =>
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => ChallanGenerationByOfficer())),
+                                },
+
                             )),
                         Container(height: 18),
                         Padding(
@@ -285,7 +294,11 @@ class _OfficerHomePageState extends State<OfficerHomePage> {
                                 padding: EdgeInsets.only(left: 8, right: 20),
                                 child: IconButton(
                                   icon: Icon(Icons.history, size: 45, color:Colors.indigo[500]),
-                                  onPressed: () => {
+                                  onPressed: () =>{
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => ChallanHistory())),
                                   },
                                 )),
                             Container(height: 18),
@@ -365,6 +378,10 @@ class _OfficerHomePageState extends State<OfficerHomePage> {
                                 child: IconButton(
                                   icon: Icon(Icons.notifications, size: 45, color:Colors.indigo[500]),
                                   onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => AllNotificationsForOfficer())),
                                   },
                                 )),
                             Container(height: 18),

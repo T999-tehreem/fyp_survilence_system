@@ -35,7 +35,7 @@ class _UpdateDriverProfileState extends State<UpdateDriverProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xb00b679b),
+        backgroundColor: Color(0xb00d4d79),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -127,7 +127,7 @@ class _UpdateDriverProfileState extends State<UpdateDriverProfile> {
             minWidth: MediaQuery.of(context).size.width * 0.1,
             shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(25.0),),
-            color: Color(0xb00b679b),
+            color: Color(0xff152e57),
             child: const Text(
               'Submit',
               style: TextStyle(color: Colors.white, fontSize: 15),
@@ -146,9 +146,11 @@ class _UpdateDriverProfileState extends State<UpdateDriverProfile> {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
           hintText: '$hinttext',  hintStyle: TextStyle(fontSize: 15, color: Colors.black38),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(10),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.0,
             ),
           ),
 

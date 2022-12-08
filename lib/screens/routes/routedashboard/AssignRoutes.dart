@@ -58,7 +58,7 @@ class _AssignroutesState extends State<Assignroutes> {
   dynamic startlat, startlng, endlat, endlng;
 
   final Stream<QuerySnapshot<Map<String, dynamic>>> allDrivers =
-      FirebaseFirestore.instance.collection('driver').snapshots();
+  FirebaseFirestore.instance.collection('driver').snapshots();
 
   Future<void> _handlePressStartLocation() async {
     void onError(PlacesAutocompleteResponse response) {
@@ -150,7 +150,7 @@ class _AssignroutesState extends State<Assignroutes> {
       setState(() {
         _time = newTime;
         timeController.text =
-            "${_time.hour} : ${_time.minute} ${_time.period.name}";
+        "${_time.hour} : ${_time.minute} ${_time.period.name}";
       });
     }
 
@@ -276,7 +276,7 @@ class _AssignroutesState extends State<Assignroutes> {
                               color: Colors.black,
                               width: 1,
                             ),
-                          borderRadius: BorderRadius.circular(10.0)
+                            borderRadius: BorderRadius.circular(10.0)
                         ),
                         child: Expanded(
                           child: StreamBuilder(
@@ -288,10 +288,10 @@ class _AssignroutesState extends State<Assignroutes> {
                               else {
                                 List<DropdownMenuItem<String>> currencyItems = [];
                                 for (int i = 0;
-                                    i < streamSnapshot.data!.docs.length;
-                                    i++) {
+                                i < streamSnapshot.data!.docs.length;
+                                i++) {
                                   String snap =
-                                      streamSnapshot.data!.docs[i]["driverId"];
+                                  streamSnapshot.data!.docs[i]["driverId"];
                                   currencyItems.add(
                                     DropdownMenuItem(
                                       child: Text(
@@ -302,27 +302,27 @@ class _AssignroutesState extends State<Assignroutes> {
                                     ),
                                   );
                                 }
-                              return DropdownButton<String>(
-                                items: currencyItems,
-                                onChanged: (currencyValue) {
-                                  final snackBar = SnackBar(
-                                    content: Text(
-                                      'Selected ID value is $currencyValue',
-                                      style: TextStyle(color: Color(0xff11b719)),
-                                    ),
-                                  );
-                                  setState(() {
-                                    selectedCurrency = currencyValue;
-                                    driverID.text = selectedCurrency;
-                                  });
-                                },
-                                value: selectedCurrency,
-                                isExpanded: false,
-                                hint: new Text(
-                                  "Choose Driver ID",
-                                  style: TextStyle(color: Colors.black45, fontSize: 12),
-                                ),
-                              );}
+                                return DropdownButton<String>(
+                                  items: currencyItems,
+                                  onChanged: (currencyValue) {
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                        'Selected ID value is $currencyValue',
+                                        style: TextStyle(color: Color(0xff11b719)),
+                                      ),
+                                    );
+                                    setState(() {
+                                      selectedCurrency = currencyValue;
+                                      driverID.text = selectedCurrency;
+                                    });
+                                  },
+                                  value: selectedCurrency,
+                                  isExpanded: false,
+                                  hint: new Text(
+                                    "Choose Driver ID",
+                                    style: TextStyle(color: Colors.black45, fontSize: 12),
+                                  ),
+                                );}
                             },
                           ),
                         ),
@@ -564,31 +564,32 @@ class _AssignroutesState extends State<Assignroutes> {
                                 await FirebaseFirestore.instance
                                     .collection("routes")
                                     .add({
-                                      'vehicleno': vehicleno.text.trim(),
-                                      'driverid': driverID.text.trim(),
-                                      'startlocation':
-                                          startlocation.text.trim(),
-                                      'destinationlocation':
-                                          destination.text.trim(),
-                                      'startlat': startlat,
-                                      'startlng': startlng,
+                                  'vehicleno': vehicleno.text.trim(),
+                                  'driverid': driverID.text.trim(),
+                                  'startlocation':
+                                  startlocation.text.trim(),
+                                  'destinationlocation':
+                                  destination.text.trim(),
+                                  'startlat': startlat,
+                                  'startlng': startlng,
                                   'lat': startlat,
                                   'lng': startlng,
-                                      'endlat': endlat,
-                                      'endlng': endlng,
-                                      'time': timeController.text.trim(),
-                                      'date': dateController.text.trim(),
-                                    })
+                                  'endlat': endlat,
+                                  'endlng': endlng,
+                                  'time': timeController.text.trim(),
+                                  'date': dateController.text.trim(),
+                                })
                                     .then((value) => {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "routes assigned successfully")
-                                        })
+                                  Fluttertoast.showToast(
+                                      msg:
+                                      "routes assigned successfully")
+                                })
                                     .catchError((e) {
-                                      Fluttertoast.showToast(msg: "error");
-                                    });
+                                  Fluttertoast.showToast(msg: "error");
+                                });
                                 isloading = false;
                                 setState(() {});
+                                Navigator.pop(context);
                               }
                             },
                             height: MediaQuery.of(context).size.height * 0.05,
@@ -600,7 +601,7 @@ class _AssignroutesState extends State<Assignroutes> {
                             child: const Text(
                               'Submit',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              TextStyle(color: Colors.white, fontSize: 15),
                             ),
                           ),
                         ],

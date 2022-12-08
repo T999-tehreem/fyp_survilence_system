@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_survilence_system/main.dart';
+import 'package:fyp_survilence_system/screens/Fuel_detection.dart';
+import 'package:fyp_survilence_system/screens/Notifications/NotificationListScreen.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/screens/home_screen(admin)/nav_bar.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/screens/tracking/AdminsideDriverListfortracking.dart';
+import 'package:fyp_survilence_system/screens/admin_dashboard/statistics.dart';
 import 'package:fyp_survilence_system/screens/chat/chatTopNavBar.dart';
 import 'package:fyp_survilence_system/screens/help_and_guide/Admin_settings_Screen.dart';
 import 'package:fyp_survilence_system/screens/help_and_guide/settings.dart';
+import 'package:fyp_survilence_system/screens/payment/login_screen.dart';
 import 'package:fyp_survilence_system/screens/routes/routedashboard/allRoutesInfo.dart';
 import 'package:fyp_survilence_system/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -104,13 +108,15 @@ class SideMenu extends StatelessWidget {
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
               leading: const Icon(Icons.notifications),
               title: const Text("NOTIFICATIONS"),
-              onTap: () => print("ListTile")
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>AllNotifications()))
           ),
           ListTile(
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
               leading: const Icon(Icons.bar_chart_rounded),
               title: const Text("STATISTICS"),
-              onTap: () => print("ListTile")
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Statistics()))
+            },
           ),
           ListTile(
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
@@ -121,9 +127,11 @@ class SideMenu extends StatelessWidget {
           ),
           ListTile(
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-              leading: const Icon(Icons.payment),
-              title: const Text("PAYMENTS"),
-              onTap: () => print("ListTile")
+              leading: const Icon(Icons.propane_tank),
+              title: const Text("FUEL MONITORING"),
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>FuelDetection()))
+            },
           ),
           ListTile(
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),

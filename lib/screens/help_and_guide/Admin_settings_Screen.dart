@@ -24,7 +24,6 @@ class MyColors {
   static const Color accent = Color(0xFFFF4081);
   static const Color accentDark = Color(0xFFF50057);
   static const Color accentLight = Color(0xFFFF80AB);
-
   static const Color grey_3 = Color(0xFFf7f7f7);
   static const Color grey_5 = Color(0xFFf2f2f2);
   static const Color grey_10 = Color(0xFFe6e6e6);
@@ -163,7 +162,7 @@ class AdminSettingsState extends State<AdminSettings> {
                 expandedHeight: 180.0,
                 floating: false,
                 pinned: true,
-                backgroundColor: Color(0xb00b679b),
+                backgroundColor: Color(0xb00d4d79),
                 flexibleSpace: FlexibleSpaceBar(),
                 bottom: PreferredSize(
                     child: Container(
@@ -209,6 +208,7 @@ class AdminSettingsState extends State<AdminSettings> {
                 ),
                 Container(height: 10),
                 Card(
+                  color: Colors.white,
                   margin: EdgeInsets.all(0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
@@ -231,8 +231,6 @@ class AdminSettingsState extends State<AdminSettings> {
                         ),
                       ),
                       Container(height: 10),
-
-                      Divider(height: 0),
                       InkWell(
                         highlightColor: Colors.grey.withOpacity(0.1),
                         splashColor: Colors.grey.withOpacity(0.1),
@@ -246,7 +244,7 @@ class AdminSettingsState extends State<AdminSettings> {
                                   .copyWith(color: MyColors.grey_80)),
                         ),
                       ),
-                      Divider(height: 0),
+                      Divider(height: 2, color: Colors.grey,),
                       InkWell(
                         highlightColor: Colors.grey.withOpacity(0.1),
                         splashColor: Colors.grey.withOpacity(0.1),
@@ -263,7 +261,7 @@ class AdminSettingsState extends State<AdminSettings> {
                                 Spacer(),
                                 Text("English",
                                     style: MyText.subhead(context)!
-                                        .copyWith(color: welcome_color)),
+                                        .copyWith(color: Colors.grey)),
                               ],
                             )),
                       ),
@@ -272,6 +270,7 @@ class AdminSettingsState extends State<AdminSettings> {
                 ),
                 Container(height: 10),
                 Card(
+                  color: Colors.white,
                   margin: EdgeInsets.all(0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
@@ -309,7 +308,7 @@ class AdminSettingsState extends State<AdminSettings> {
                                   .copyWith(color: MyColors.grey_80)),
                         ),
                       ),
-                      Divider(height: 0),
+                      Divider(height: 2, color: Colors.grey,),
                       InkWell(
                         highlightColor: Colors.grey.withOpacity(0.1),
                         splashColor: Colors.grey.withOpacity(0.1),
@@ -325,7 +324,7 @@ class AdminSettingsState extends State<AdminSettings> {
                                   .copyWith(color: MyColors.grey_80)),
                         ),
                       ),
-                      Divider(height: 0),
+                      Divider(height: 2, color: Colors.grey,),
                       InkWell(
                         highlightColor: Colors.grey.withOpacity(0.1),
                         splashColor: Colors.grey.withOpacity(0.1),
@@ -345,7 +344,7 @@ class AdminSettingsState extends State<AdminSettings> {
                 Container(height: 15),
                 Text("Copyright @2022",
                     style: MyText.caption(context)!
-                        .copyWith(color: welcome_color)),
+                        .copyWith(color: Colors.grey)),
                 Container(height: 15),
               ],
             ),

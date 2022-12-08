@@ -70,10 +70,7 @@ class _RoutesTableState extends State<RoutesTable> {
             SizedBox(height: 10,),
             GestureDetector(
               onTap: () {
-                nav(
-                    context,
-                    Assignroutes()
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Assignroutes()));
               },
               child: Align(
                 alignment: Alignment.topRight,
@@ -81,7 +78,7 @@ class _RoutesTableState extends State<RoutesTable> {
                   backgroundColor: Color(0xb00b679b),
                   label: Text(
                     "Assign Routes",
-                    style: TextStyle(color: Colors.black,),
+                    style: TextStyle(color: Colors.white,),
                   ),
                 ),
               ),

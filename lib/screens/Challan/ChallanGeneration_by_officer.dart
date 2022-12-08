@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_survilence_system/model/driver_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fyp_survilence_system/model/notification_model.dart';
+import 'package:fyp_survilence_system/model/policeofficer_model.dart';
 import 'package:fyp_survilence_system/model/storage_model.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/constants.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/controllers/MenuController.dart';
@@ -112,8 +114,8 @@ class ChallanGenerationByOfficer extends StatefulWidget {
 
 class ChallanGenerationByOfficerState
     extends State<ChallanGenerationByOfficer> {
-  var selectedCurrency, selectedType;
-  TextEditingController driverID = TextEditingController();
+  var dID, vehicleNo,driverName;
+
   TextEditingController Name = TextEditingController();
   TextEditingController Vehicle = TextEditingController();
   TextEditingController driverRank = TextEditingController();
@@ -146,7 +148,18 @@ class ChallanGenerationByOfficerState
       print('User declined or has not accepted permission');
     }
   }
+  void getID(String id) async
+  {
+    await FirebaseMessaging.instance.getToken().then(
+            (token) {
+          setState(() {
 
+            driverId = id.toString();
+          });
+
+        }
+    );
+  }
   void getToken(String id) async
   {
     await FirebaseMessaging.instance.getToken().then(
@@ -162,7 +175,7 @@ class ChallanGenerationByOfficerState
   }
 
   void saveToken(String token,String id) async{
-    await FirebaseFirestore.instance.collection('driver').doc('4PHJlyo2fCRDW6VklSGqUoaRyo63').update({
+    await FirebaseFirestore.instance.collection('driver').doc(id).update({
       'token' : token,
     });
   }
@@ -260,8 +273,20 @@ class ChallanGenerationByOfficerState
   int r = 0;
   Stream<QuerySnapshot<Map<String, dynamic>>> foundOfficers =
   FirebaseFirestore.instance.collection('driver').snapshots();
+  User? user = FirebaseAuth.instance.currentUser;
+  OfficerModel loggedInUser = OfficerModel();
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection("Officer")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+
+      setState(() {
+        loggedInUser = OfficerModel.fromMapOfficer(value.data());
+      });
+    });
     requestPermission();
     loadFCM();
     listenFCM();
@@ -274,11 +299,11 @@ class ChallanGenerationByOfficerState
     'Gold',
     'Silver',
   ];
-  String dropdownvalue1 = 'Seatbelt voilation';
+  String dropdownvalue1 = 'Seatbelt violation';
   var items1 = [
-    'Seatbelt voilation',
+    'Seatbelt violation',
     'drowsy state',
-    'Seatbelt voilation and drowsy state',
+    'Seatbelt violation and drowsy state',
   ];
   String dropdownvalue2 = 'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation and is being fined for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.';
   var items2 = [
@@ -324,10 +349,10 @@ class ChallanGenerationByOfficerState
       User? user = _auth.currentUser;
       ChallanModel challanModel= ChallanModel();
       challanModel.Challan_no = r.toString();
-      challanModel.challan_driver_name = selectedCurrency;
+      challanModel.challan_driver_name = driverName;
       challanModel.challan_driver_rank = dropdownvalue;
       challanModel.challan_type = dropdownvalue1;
-      challanModel.challan_vehicle_no =  selectedType;
+      challanModel.challan_vehicle_no =  vehicleNo;
       challanModel.challan_time = formattedDate.toString();
       challanModel.challan_day = date_time.split(" ")[0];
       challanModel.challan_date = date_time.split(" ")[1];
@@ -335,8 +360,6 @@ class ChallanGenerationByOfficerState
       challanModel.challan_year = date_time.split(" ")[3];
       challanModel.challan_description = dropdownvalue2;
       challanModel.challan_fine = dropdownvalue3;
-
-
       await firebaseFirestore
           .collection("challan")
           .doc()
@@ -348,7 +371,7 @@ class ChallanGenerationByOfficerState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF246587),
+        backgroundColor: Color(0xb00d4d79),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -423,7 +446,7 @@ class ChallanGenerationByOfficerState
                       Padding(
                         padding: EdgeInsets.only(top: 15, left: 15, bottom: 5),
                         child: Text(
-                          'Driver ID:',
+                          'Driver Name:',
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
@@ -448,7 +471,7 @@ class ChallanGenerationByOfficerState
                                     i < streamSnapshot.data!.docs.length;
                                     i++) {
                                   String snap =
-                                      streamSnapshot.data!.docs[i]["driverId"];
+                                      streamSnapshot.data!.docs[i]["name"];
                                   currencyItems.add(
                                     DropdownMenuItem(
                                       child: Text(
@@ -482,14 +505,13 @@ class ChallanGenerationByOfficerState
                                         ),
                                       );
                                       setState(() {
-                                        selectedCurrency = currencyValue;
-                                        driverID.text = selectedCurrency;
+                                        driverName = currencyValue;
                                       });
                                     },
-                                    value: selectedCurrency,
+                                    value: driverName,
                                     isExpanded: true,
                                     hint: new Text(
-                                      "Choose Driver ID",
+                                      "Choose Driver Name",
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 15),
                                     ),
@@ -618,11 +640,11 @@ class ChallanGenerationByOfficerState
                                         ),
                                       );
                                       setState(() {
-                                        selectedType = currencyValue;
-                                        Vehicle.text = selectedType;
+                                        vehicleNo = currencyValue;
+
                                       });
                                     },
-                                    value: selectedType,
+                                    value: vehicleNo,
                                     isExpanded: false,
                                     hint: new Text(
                                       "Choose Vehicle Number",
@@ -684,7 +706,7 @@ class ChallanGenerationByOfficerState
                                 value: dropdownvalue,
 
                                 // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
+
 
                                 // Array list of items
                                 items: items.map((String items) {
@@ -760,7 +782,7 @@ class ChallanGenerationByOfficerState
                             padding: EdgeInsets.only(left: 15, bottom: 10),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.85,
-                              height: MediaQuery.of(context).size.height * 0.06,
+                              height: MediaQuery.of(context).size.height * 0.07,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.black,
@@ -774,7 +796,7 @@ class ChallanGenerationByOfficerState
                                 value: dropdownvalue1,
 
                                 // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
+
 
                                 // Array list of items
                                 items: items1.map((String items) {
@@ -783,6 +805,8 @@ class ChallanGenerationByOfficerState
                                     child: Text(items),
                                   );
                                 }).toList(),
+                                isExpanded: true,
+                                itemHeight: null,
                                 // After selecting the desired option,it will
                                 // change button value to selected value
                                 onChanged: (String? newValue) {
@@ -827,7 +851,6 @@ class ChallanGenerationByOfficerState
                             padding: EdgeInsets.only(left: 15, bottom: 10),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.85,
-                              height: MediaQuery.of(context).size.height * 0.30,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.black,
@@ -956,10 +979,13 @@ class ChallanGenerationByOfficerState
           child: MaterialButton(
             onPressed: () async{
               sBuilder(context);
+            getToken(driverId.toString());
             DocumentSnapshot snap = await FirebaseFirestore.instance.collection(
-                "driver").doc('4PHJlyo2fCRDW6VklSGqUoaRyo63').get();
+                "driver").doc(driverId).get();
             String token = snap['token'];
-              sendPushMessage(token, dropdownvalue2, dropdownvalue1);},
+              sendPushMessage(token, dropdownvalue2, dropdownvalue1);
+            postDetailsToFirestoreNotification(driverName,dropdownvalue1,dropdownvalue2,'${loggedInUser.OfficerName}');
+              },
             height: MediaQuery.of(context).size.height * 0.05,
             minWidth: MediaQuery.of(context).size.width * 0.75,
             shape: RoundedRectangleBorder(
@@ -974,6 +1000,22 @@ class ChallanGenerationByOfficerState
         ),
       ],
     );
+
+  }
+
+  postDetailsToFirestoreNotification(String name,String title,String description,String officerName) async {
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    NotificationModel notificationModel= NotificationModel();
+    notificationModel.officerName = officerName;
+    notificationModel.Username = name;
+    notificationModel.Notificationtitle = title;
+    notificationModel.Notificationdescription = description;
+    await firebaseFirestore
+        .collection("notifications")
+        .doc()
+        .set(notificationModel.toMapNotificationOfficer());
   }
 Widget sBuilder(BuildContext context){
 
@@ -993,8 +1035,8 @@ Widget sBuilder(BuildContext context){
                 FutureBuilder<String>(
                     builder: (_, imageSnapshot) {
                       final imageUrl = imageSnapshot.data;
-                      if(data['driverId']==selectedCurrency.toString()){
-                        getToken(data.id);
+                      if(data['name']==driverName){
+                        getID(data.id);
                       }
                       return SizedBox(child: Text(data.id.toString()),);
                     })

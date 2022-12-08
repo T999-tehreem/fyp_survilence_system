@@ -54,7 +54,7 @@ class _FAQState extends State<FAQ> {
     return Scaffold(
         backgroundColor: MyColors.grey_10,
         appBar: AppBar(
-          backgroundColor: Color(0xb00b679b),
+          backgroundColor: Color(0xb00d4d79),
           centerTitle: true,
           title: const Text(
             'F A Q',

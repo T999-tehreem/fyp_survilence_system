@@ -23,6 +23,7 @@ class _OfficerChatListScreenState extends State<OfficerChatListScreen> {
       dynamic>>> foundOfficer = FirebaseFirestore.instance.collection('Officer').snapshots();
   DatabaseMethods databaseMethods = new DatabaseMethods();
 
+
   getChatRoomId(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
       return "$b\_$a";
@@ -31,11 +32,11 @@ class _OfficerChatListScreenState extends State<OfficerChatListScreen> {
     }
   }
 
-  createChatRoomAndStartConversation(String userName, String myName) {
+  createChatRoomAndStartConversation(String userName, String myName,String uid,String uid2) {
     List<String> users = [myName, userName];
-    String chatRoomId = getChatRoomId(myName, userName);
+    String chatRoomId = getChatRoomId(uid, uid2);
     Map<String, dynamic> chatRoomMap = {
-      "Officer": users,
+      "users": users,
       "chatRoomId": chatRoomId,
     };
     databaseMethods.createChatRoom(chatRoomId, chatRoomMap);
@@ -43,7 +44,7 @@ class _OfficerChatListScreenState extends State<OfficerChatListScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ConversationScreen(
-            chatRoomId: chatRoomId, myName: myName, userName: userName),
+          chatRoomId: chatRoomId, myName: myName, userName: userName, currentU: user!.uid,),
       ),
     );
   }
@@ -117,11 +118,9 @@ class _OfficerChatListScreenState extends State<OfficerChatListScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               createChatRoomAndStartConversation(
-                                                  streamSnapshot
-                                                      .data?.docs[index]
+                                                  streamSnapshot.data?.docs[index]
                                                   ['Officername'],
-                                                  loggedInUser.OfficerName
-                                                      .toString());
+                                                  'admin','${streamSnapshot.data?.docs[index].id}',user!.uid);
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(

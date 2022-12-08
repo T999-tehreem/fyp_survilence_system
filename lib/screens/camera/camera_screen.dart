@@ -3,24 +3,30 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fyp_survilence_system/model/challan_model.dart';
+import 'package:fyp_survilence_system/model/driver_model.dart';
+import 'package:fyp_survilence_system/model/notification_model.dart';
 import 'package:fyp_survilence_system/utils/color.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../Challan/challan.dart';
 import '../admin_dashboard/screens/Driver/DriverDummyDashboard.dart';
 import '../chat/DriverMessageScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
+import 'dart:math';
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key, required this.cameras}) : super(key: key);
+  CameraPage({Key? key, required this.cameras, required this.username}) : super(key: key);
 
   final List<CameraDescription>? cameras;
+  String? username;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -148,7 +154,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void saveToken(String token) async{
-    await FirebaseFirestore.instance.collection("admin").doc("NDpiCLbSoXVOvNJqoZVM").update({
+    await FirebaseFirestore.instance.collection("admin").doc("zXQUtMmn7PN4oQIVAbIa2cSYNwi1").update({
       'token' : token,
     });
   }
@@ -265,15 +271,43 @@ class _CameraPageState extends State<CameraPage> {
     });
 
   }
+  final _auth = FirebaseAuth.instance;
+  postDetailsToFirestore(String name,String title,String description) async {
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    NotificationModel notificationModel= NotificationModel();
+    notificationModel.officerName = '';
+    notificationModel.Username = name;
+    notificationModel.Notificationtitle = title;
+    notificationModel.Notificationdescription = description;
+    await firebaseFirestore
+        .collection("notifications")
+        .doc()
+        .set(notificationModel.toMapNotificationOfficer());
+    
+  }
+  User? user = FirebaseAuth.instance.currentUser;
+  DriverModel loggedInUser = DriverModel();
+
   @override
   void initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection("driver")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      loggedInUser = DriverModel.fromMapDriver(value.data());
+      setState(() {
+        loggedInUser = DriverModel.fromMapDriver(value.data());
+      });
+    });
     starttimer();
     requestPermission();
     loadFCM();
     listenFCM();
     getToken();
-
     initCamera(widget.cameras![0]);
   }
 
@@ -298,7 +332,7 @@ class _CameraPageState extends State<CameraPage> {
   uploadImage() async{
     timer = 120;
    final request = http.MultipartRequest(
-        "POST" , Uri.parse("https://d098-203-124-40-245.eu.ngrok.io/upload")
+        "POST" , Uri.parse("https://7fcb-203-124-40-245.eu.ngrok.io/upload")
     );
     final headers = {"Content-type": "multipart/form-data"};
     request.files.add(http.MultipartFile('image',
@@ -315,7 +349,7 @@ class _CameraPageState extends State<CameraPage> {
     print(message);
     print(seat_belt);
     second_Image = selectedImage;
-
+    Fluttertoast.showToast(msg: '${message.toString()} ${seat_belt}');
     setState(() {
       selectedImage = null;
     });
@@ -384,46 +418,39 @@ class _CameraPageState extends State<CameraPage> {
       int timer2 = 10;
       FlutterRingtonePlayer.playAlarm();
       const onesec = Duration(seconds: 1);
-      Timer.periodic(onesec, (Timer t) {
-        if(mounted) {
-            setState(() {
-            if (timer2 < 1) {
-              FlutterRingtonePlayer.playAlarm(asAlarm: false);
-              } else if (canceltimer == true) {
-              t.cancel();
-            } else {
-              timer2 = timer2 - 1;
-            }
-            showtimer = timer2.toString();
-          });
-        }
-      });
       if(message=='tired' && seat_belt=='No_Seatbelt'){
         DocumentSnapshot snap = await FirebaseFirestore.instance.collection(
-            "admin").doc('NDpiCLbSoXVOvNJqoZVM').get();
+            "admin").doc('zXQUtMmn7PN4oQIVAbIa2cSYNwi1').get();
         String token = snap['token'];
         print(token);
+        postDetailsToFirestore("${widget.username}", "Tiredness and No Seatbelt", 'Challan generated due to tiredness and seatbelt violation');
+        postDetailsToFirestoreChallan("Tiredness and No Seatbelt", 'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation and is being fined for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.', '1000');
         sendPushMessage(token, 'Challan generated due to tiredness and seatbelt violation', message.toString());
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(challantype:'Seatbelt voilation and drowsy state',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation and is being fined for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:1000)));
+        FlutterRingtonePlayer.playAlarm(asAlarm: false);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(driverName:loggedInUser.name,driverRank: loggedInUser.drivingrank,randomNum: r,challantype:'Seatbelt voilation and drowsy state',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation and is being fined for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:1000)));
       }
       if(message=='tired'){
         DocumentSnapshot snap = await FirebaseFirestore.instance.collection(
-            "admin").doc('NDpiCLbSoXVOvNJqoZVM').get();
+            "admin").doc('zXQUtMmn7PN4oQIVAbIa2cSYNwi1').get();
         String token = snap['token'];
         print(token);
+        postDetailsToFirestore("${widget.username}", "Tired", 'Challan generated due to tiredness');
+        postDetailsToFirestoreChallan("Drowsy State", 'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.', '700');
         sendPushMessage(token, 'Challan generated due to tiredness', message.toString());
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(challantype:'Drowsy State',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:700)));
+        FlutterRingtonePlayer.playAlarm(asAlarm: false);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(driverName:loggedInUser.name,driverRank: loggedInUser.drivingrank,randomNum: r,challantype:'Drowsy State',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for driving the vehicle in drowsy state. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:700)));
       }
       if(seat_belt=='No_Seatbelt'){
         DocumentSnapshot snap = await FirebaseFirestore.instance.collection(
-            "admin").doc('NDpiCLbSoXVOvNJqoZVM').get();
+            "admin").doc('zXQUtMmn7PN4oQIVAbIa2cSYNwi1').get();
         String token = snap['token'];
         print(token);
+        postDetailsToFirestore("${widget.username}", "No Seatbelt", 'Challan generated due to seatbelt violation');
         sendPushMessage(token, 'Challan generated due to seatbelt violation', message.toString());
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(challantype:'Seatbelt voilation ',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:300)));
+        postDetailsToFirestoreChallan("No Seatbelt", 'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation. The concerned person needs to pay the fine amount within the deadline strictly.', '300');
+        FlutterRingtonePlayer.playAlarm(asAlarm: false);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChallanScreen(driverName:loggedInUser.name,driverRank: loggedInUser.drivingrank,randomNum: r,challantype:'Seatbelt voilation ',ChallanDetails:'The driver is being charged for violating the driving laws of Islamabad Traffic Police under THE PROVINCIAL MOTOR VEHICLES ORDINANCE 1965 for seatbelt violation. The concerned person needs to pay the fine amount within the deadline strictly.',ChallanFine:300)));
       }
-
-
     }
     timer = 5;
   }
@@ -504,10 +531,10 @@ class _CameraPageState extends State<CameraPage> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Color(0xffAFE1AF),
+                        color: Color(0xb00d4d79),
                       ),
                       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                      color: Color(0xffAFE1AF),
+                      color: Color(0xff152e57),
 
                     ),
 
@@ -527,7 +554,7 @@ class _CameraPageState extends State<CameraPage> {
                             icon: Icon(_isRearCameraSelected
                                 ? CupertinoIcons.switch_camera
                                 : CupertinoIcons.switch_camera_solid,
-                              color: Colors.black, size: 35,),
+                              color: Colors.white, size: 35,),
                           ),
 
 
@@ -541,5 +568,32 @@ class _CameraPageState extends State<CameraPage> {
                 )),
           ]),
         ));
+  }
+  String? formattedDate;
+  DateTime now = DateTime.now();
+  int? r;
+  postDetailsToFirestoreChallan(String challanType,String challanDetails,String challanFine) async {
+    Random rnd = new Random();
+    r = 100000+rnd.nextInt(99999999-100000);
+    formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+    String date_time = DateFormat('EEE d MMM y').format(now);
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    ChallanModel challanModel= ChallanModel();
+    challanModel.Challan_no = r.toString();
+    challanModel.challan_driver_name = loggedInUser.name;
+    challanModel.challan_driver_rank = loggedInUser.drivingrank;
+    challanModel.challan_type = challanType;
+    challanModel.challan_time = formattedDate.toString();
+    challanModel.challan_day = date_time.split(" ")[0];
+    challanModel.challan_date = date_time.split(" ")[1];
+    challanModel.challan_month = date_time.split(" ")[2];
+    challanModel.challan_year = date_time.split(" ")[3];
+    challanModel.challan_description = challanDetails;
+    challanModel.challan_fine = challanFine;
+    await firebaseFirestore
+        .collection("challan")
+        .doc(user!.uid)
+        .set(challanModel.toMapChallan());
   }
 }

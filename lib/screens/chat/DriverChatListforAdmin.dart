@@ -30,9 +30,9 @@ class _DriverChatListScreenState extends State<DriverChatListScreen> {
     }
   }
 
-  createChatRoomAndStartConversation(String userName, String myName) {
+  createChatRoomAndStartConversation(String userName, String myName,String uid,String uid2) {
     List<String> users = [myName, userName];
-    String chatRoomId = getChatRoomId(myName, userName);
+    String chatRoomId = getChatRoomId(uid, uid2);
     Map<String, dynamic> chatRoomMap = {
       "users": users,
       "chatRoomId": chatRoomId,
@@ -42,7 +42,7 @@ class _DriverChatListScreenState extends State<DriverChatListScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ConversationScreen(
-            chatRoomId: chatRoomId, myName: myName, userName: userName),
+          chatRoomId: chatRoomId, myName: myName, userName: userName, currentU: user!.uid,),
       ),
     );
   }
@@ -115,11 +115,11 @@ class _DriverChatListScreenState extends State<DriverChatListScreen> {
                                   ),),
                                   GestureDetector(
                                     onTap: () {
+
                                       createChatRoomAndStartConversation(
-                                          streamSnapshot
-                                              .data?.docs[index]
+                                          streamSnapshot.data?.docs[index]
                                           ['name'],
-                                          "admin");
+                                          'admin','${streamSnapshot.data?.docs[index].id}',user!.uid);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(

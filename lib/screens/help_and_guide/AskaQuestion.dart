@@ -47,7 +47,7 @@ class _AskAQuestionState extends State<AskAQuestion> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xb00b679b),
+        backgroundColor: Color(0xb00d4d79),
         title: Text("Ask a Question"),
       ),
       backgroundColor:  Colors.white,
@@ -70,20 +70,32 @@ class _AskAQuestionState extends State<AskAQuestion> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.black),
+                autofocus: false,
                 controller: emailController,
-                decoration: const InputDecoration(
-                  fillColor: Colors.white10,
-                  filled: true,
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                  hintText: 'Email',
-                  hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                keyboardType: TextInputType.emailAddress,
+                onSaved: (value) {
+                  emailController.text = value!;
+                },
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
                     ),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  hintText: "Email",
+                  hintStyle: const TextStyle(
+                    color: Colors.grey, // <-- Change this
+                    fontSize: null,
+                    fontStyle: FontStyle.normal,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -94,22 +106,33 @@ class _AskAQuestionState extends State<AskAQuestion> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
-                keyboardType: TextInputType.text,
-                style: TextStyle(color: Colors.black),
+                autofocus: false,
                 controller: questionController,
-                maxLines: 7,
-                decoration: const InputDecoration(
-                  fillColor: secondaryColor,
-                  filled: true,
-                  focusColor: secondaryColor,
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
-                  hintText: 'Ask a Question',
-                  hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                maxLines: 5,
+                keyboardType: TextInputType.text,
+                onSaved: (value) {
+                  questionController.text = value!;
+                },
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
                     ),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  hintText: "Ask A Question",
+                  hintStyle: const TextStyle(
+                    color: Colors.grey, // <-- Change this
+                    fontSize: null,
+                    fontStyle: FontStyle.normal,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -126,11 +149,14 @@ class _AskAQuestionState extends State<AskAQuestion> {
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(25.0),
               ),
-              color: Color(0xb00b679b),
+              color: Color(0xff152e57),
               child: const Text(
                 'Send',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .05,
             ),
           ],
         ),

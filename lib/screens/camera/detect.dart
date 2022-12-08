@@ -202,7 +202,7 @@ class DetectScreenState extends State<DetectScreen> {
                                     side: BorderSide(color: Colors.white , width: 2)
                                 ),
                                 elevation: 5,
-                                color: Color(0xb00b679b),
+                                color: Color(0xff152e57),
                                 child: MaterialButton(
                                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                   onPressed: () {
@@ -227,7 +227,7 @@ class DetectScreenState extends State<DetectScreen> {
                                       side: BorderSide(color: Colors.white , width: 2)
                                   ),
                                   elevation: 5,
-                                  color: Color(0xb00b679b),
+                                  color: Color(0xff152e57),
                                   child: MaterialButton(
 
                                     padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),

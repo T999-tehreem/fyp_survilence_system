@@ -7,8 +7,10 @@ import 'package:fyp_survilence_system/screens/Challan/my_strings.dart';
 import 'package:fyp_survilence_system/screens/Challan/toolbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_survilence_system/model/driver_model.dart';
+import 'package:fyp_survilence_system/screens/payment/login_screen.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+
 class MyColors {
   static const Color primary = Color(0xFF1976D2);
   static const Color primaryDark = Color(0xFF1565C0);
@@ -16,7 +18,6 @@ class MyColors {
   static const Color accent = Color(0xFFFF4081);
   static const Color accentDark = Color(0xFFF50057);
   static const Color accentLight = Color(0xFFFF80AB);
-
   static const Color grey_3 = Color(0xFFf7f7f7);
   static const Color grey_5 = Color(0xFFf2f2f2);
   static const Color grey_10 = Color(0xFFe6e6e6);
@@ -56,8 +57,8 @@ class MyText {
 
   static TextStyle medium(BuildContext context) {
     return Theme.of(context).textTheme.subtitle1!.copyWith(
-      fontSize: 18,
-    );
+          fontSize: 18,
+        );
   }
 
   static TextStyle? subhead(BuildContext context) {
@@ -90,17 +91,25 @@ class MyText {
 }
 
 class ChallanScreen extends StatefulWidget {
-  ChallanScreen({required this.challantype, required this.ChallanDetails, required this.ChallanFine});
- String? challantype;
- String? ChallanDetails;
- int? ChallanFine;
+  ChallanScreen(
+      {required this.driverName,
+      required this.driverRank,
+      required this.challantype,
+      required this.randomNum,
+      required this.ChallanDetails,
+      required this.ChallanFine});
+  String? challantype;
+  String? ChallanDetails;
+  int? ChallanFine;
+  String? driverName;
+  String? driverRank;
+  int? randomNum;
   @override
   ChallanScreenState createState() => new ChallanScreenState();
 }
 
-
-class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMixin {
-
+class ChallanScreenState extends State<ChallanScreen>
+    with TickerProviderStateMixin {
   bool expand1 = false;
   bool expand2 = false;
   late AnimationController controller1, controller2;
@@ -109,7 +118,6 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
   Random rnd = new Random();
   int r = 0;
   final _auth = FirebaseAuth.instance;
-
 
   User? user = FirebaseAuth.instance.currentUser;
   DriverModel loggedInUser = DriverModel();
@@ -123,11 +131,19 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
         .get()
         .then((value) {
       loggedInUser = DriverModel.fromMapDriver(value.data());
-      setState(() {});
+      setState(() {
+        loggedInUser = DriverModel.fromMapDriver(value.data());
+      });
     });
-    r = 100000+rnd.nextInt(99999999-100000);
-    controller1 = AnimationController(vsync: this, duration: Duration(milliseconds: 200),);
-    controller2 = AnimationController(vsync: this, duration: Duration(milliseconds: 200),);
+    r = 100000 + rnd.nextInt(99999999 - 100000);
+    controller1 = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+    controller2 = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
 
     animation1 = Tween(begin: 0.0, end: 180.0).animate(controller1);
     animation1View = CurvedAnimation(parent: controller1, curve: Curves.linear);
@@ -135,192 +151,190 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
     animation2 = Tween(begin: 0.0, end: 180.0).animate(controller2);
     animation2View = CurvedAnimation(parent: controller2, curve: Curves.linear);
 
-    controller1.addListener(() { setState(() {}); });
-    controller2.addListener(() { setState(() {}); });
+    controller1.addListener(() {
+      setState(() {});
+    });
+    controller2.addListener(() {
+      setState(() {});
+    });
   }
-  final Stream<
-      QuerySnapshot<Map<String, dynamic>>> VehicleNumber = FirebaseFirestore
-      .instance
-      .collection('routes')
-      .snapshots();
+
+  final Stream<QuerySnapshot<Map<String, dynamic>>> VehicleNumber =
+      FirebaseFirestore.instance.collection('routes').snapshots();
   String? formattedDate;
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
     String date_time = DateFormat('EEE d MMM y').format(now);
-    postDetailsToFirestore() async {
-
-      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      User? user = _auth.currentUser;
-      ChallanModel challanModel= ChallanModel();
-      challanModel.Challan_no = r.toString();
-      challanModel.challan_driver_name = loggedInUser.name;
-      challanModel.challan_driver_rank = loggedInUser.drivingrank;
-      challanModel.challan_type = widget.challantype;
-      challanModel.challan_time = formattedDate.toString();
-      challanModel.challan_day = date_time.split(" ")[0];
-      challanModel.challan_date = date_time.split(" ")[1];
-      challanModel.challan_month = date_time.split(" ")[2];
-      challanModel.challan_year = date_time.split(" ")[3];
-      challanModel.challan_description = widget.ChallanDetails;
-      challanModel.challan_fine = widget.ChallanFine.toString();
-
-
-
-      await firebaseFirestore
-          .collection("challan")
-          .doc(user!.uid)
-          .set(challanModel.toMapChallan());
-    }
-    postDetailsToFirestore();
     return Scaffold(
       backgroundColor: MyColors.grey_10,
-      appBar: CommonAppBar.getPrimarySettingAppbar(context, "Challan Details") as PreferredSizeWidget?,
+      appBar: CommonAppBar.getPrimarySettingAppbar(context, "Challan Details")
+          as PreferredSizeWidget?,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Card(
-              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
               margin: EdgeInsets.fromLTRB(0, 10, 0, 3),
               elevation: 3,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                width: double.infinity, height: 60,
+                width: double.infinity,
+                height: 60,
                 child: Row(
                   children: <Widget>[
                     Container(width: 10),
-                    Text("Challan Number", style: MyText.subhead(context)!.copyWith(color: MyColors.grey_80)),
+                    Text("Challan Number",
+                        style: MyText.subhead(context)!
+                            .copyWith(color: MyColors.grey_80)),
                     Spacer(),
-                    Text(r.toString(), style: MyText.title(context)!.copyWith(color: MyColors.accent)),
+                    Text('${widget.randomNum}',
+                        style: MyText.title(context)!
+                            .copyWith(color: MyColors.accent)),
                     Container(width: 10),
                     IconButton(
-                      icon: Icon(Icons.content_copy, color: MyColors.grey_60,),
-                      onPressed: (){},
+                      icon: Icon(
+                        Icons.content_copy,
+                        color: MyColors.grey_60,
+                      ),
+                      onPressed: () {},
                     )
                   ],
                 ),
               ),
             ),
             SizedBox(
-              width: 450,
-              height: 400,
-              child: StreamBuilder(
-                stream: VehicleNumber,
-                builder:
-                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Name: ${widget.driverName.toString()}',
+                      style: MyText.subhead(context)!.copyWith(
+                          color: MyColors.grey_90,
+                          fontWeight: FontWeight.bold)),
+                  Container(height: 2),
+                  Text('Rank: ${widget.driverRank.toString()}',
+                      style: MyText.body1(context)!
+                          .copyWith(color: MyColors.grey_40)),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Driver Id: ${loggedInUser.driverId}",
+                      style: MyText.body2(context)!.copyWith(
+                          color: MyColors.grey_90,
+                          fontWeight: FontWeight.bold)),
+                  Container(height: 25),
+                  Text("Time: ${formattedDate.toString()}",
+                      style: MyText.body2(context)!.copyWith(
+                          color: MyColors.grey_90,
+                          fontWeight: FontWeight.bold)),
+                  Container(height: 25),
+                ],
+              ),
+            ),
 
+            /*Card(
 
-                  return (streamSnapshot.hasData?Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Expanded(
-                      // ignore: prefer_is_empty
-                      child: streamSnapshot.data?.docs.length != 0
-                          ? ListView.builder(
-                        itemCount: streamSnapshot.data?.docs.length,
-                        itemBuilder: (ctx, index) =>
-                        loggedInUser.driverId.toString()==streamSnapshot.data?.docs[index]['driverid'].toString()?
-                            Card(
-                              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(0)),
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 3),
-                              elevation: 3,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              child: Container(
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(0)),
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 3),
+                        elevation: 3,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: Container(
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(child: Icon(Icons.person, color: MyColors.primary),
+                                    padding: EdgeInsets.all(20),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(widget.driverName.toString(), style: MyText.subhead(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
+                                      Container(height: 2),
+                                      Text(widget.driverRank.toString(), style: MyText.body1(context)!.copyWith(color: MyColors.grey_40)),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Divider(height: 0),
+                              Container(
+
+                                padding: EdgeInsets.all(15),
+                                child: Row(
                                   children: <Widget>[
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Container(child: Icon(Icons.person, color: MyColors.primary),
-                                          padding: EdgeInsets.all(20),
+                                        Text("Driver Id", style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
+                                        Container(height: 25),
+                                        Text("Time", style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
+                                        Container(height: 25),
+                                        ],
+                                    ),
+                                    Container(width: 20),
+                                    Column(
+                                      children: <Widget>[
+                                        Container(height: 5),
+                                        Container(
+                                          width : 15, height: 15,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(color: MyColors.primary, width: 2),
+                                              color: MyColors.primary,
+                                              shape: BoxShape.circle
+                                          ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(loggedInUser.name.toString(), style: MyText.subhead(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                            Container(height: 2),
-                                            Text(loggedInUser.drivingrank.toString(), style: MyText.body1(context)!.copyWith(color: MyColors.grey_40)),
-                                          ],
-                                        )
+                                        Expanded(
+                                          child: Container(width: 2, color: MyColors.primary),
+                                        ),
+                                        Container(
+                                          width : 15, height: 15,
+                                          decoration: BoxDecoration(
+                                              color: MyColors.primary,
+                                              shape: BoxShape.circle
+                                          ),
+                                        ),
+                                        Container(height: 5),
                                       ],
                                     ),
-                                    Divider(height: 0),
-                                    Container(
-
-                                      padding: EdgeInsets.all(15),
-                                      child: Row(
+                                    Container(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text("Driver Id", style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                              Container(height: 25),
-                                              Text("Vehicle No", style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                              Container(height: 25),
-                                              Text("Time", style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                              Container(height: 25),
-                                              ],
-                                          ),
-                                          Container(width: 20),
-                                          Column(
-                                            children: <Widget>[
-                                              Container(height: 5),
-                                              Container(
-                                                width : 15, height: 15,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(color: MyColors.primary, width: 2),
-                                                    color: MyColors.primary,
-                                                    shape: BoxShape.circle
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Container(width: 2, color: MyColors.primary),
-                                              ),
-                                              Container(
-                                                width : 15, height: 15,
-                                                decoration: BoxDecoration(
-                                                    color: MyColors.primary,
-                                                    shape: BoxShape.circle
-                                                ),
-                                              ),
-                                              Container(height: 5),
-                                            ],
-                                          ),
-                                          Container(width: 20),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(loggedInUser.driverId.toString(), style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                                Container(height: 25),
-                                                Text( streamSnapshot.data
-                                                    ?.docs[index]
-                                                ['vehicleno'], style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                                Container(height: 25),
-                                                Text(formattedDate.toString(), style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                                              ],
-                                            ),
-                                          )
+                                          Text(loggedInUser.driverId.toString(), style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
+                                          Container(height: 25),
+                                          Text(formattedDate.toString(), style: MyText.body2(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
                                         ],
                                       ),
-                                    ),
-
+                                    )
                                   ],
                                 ),
                               ),
-                            ):SizedBox(),
-                      )
-                          : const Text(
-                        'No results found',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  ):Center(child: CircularProgressIndicator(),));},
-              ),),
+
+                            ],
+                          ),
+                        ),
+                      ),*/
             Card(
-              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
               margin: EdgeInsets.fromLTRB(0, 10, 0, 3),
               elevation: 3,
               clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -331,17 +345,28 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Container(child: Icon(Icons.history_edu_rounded, color: MyColors.primary),
+                        Container(
+                          child: Icon(Icons.history_edu_rounded,
+                              color: MyColors.primary),
                           padding: EdgeInsets.all(20),
                         ),
-                        Text(widget.challantype.toString(), style: MyText.subhead(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-                        SizedBox(width:5),
-                        Text('pkr:${widget.ChallanFine.toString()}', style: MyText.subhead(context)!.copyWith(color: MyColors.grey_90, fontWeight: FontWeight.bold)),
+                        Text(widget.challantype.toString(),
+                            style: MyText.subhead(context)!.copyWith(
+                                color: MyColors.grey_90,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(width: 5),
+                        Text('pkr:${widget.ChallanFine.toString()}',
+                            style: MyText.subhead(context)!.copyWith(
+                                color: MyColors.grey_90,
+                                fontWeight: FontWeight.bold)),
                         Transform.rotate(
                           angle: animation1.value * math.pi / 180,
                           child: IconButton(
-                            icon: Icon(Icons.expand_more, color: MyColors.grey_60),
-                            onPressed: (){togglePanel1();},
+                            icon: Icon(Icons.expand_more,
+                                color: MyColors.grey_60),
+                            onPressed: () {
+                              togglePanel1();
+                            },
                           ),
                         ),
                         Container(width: 10)
@@ -353,16 +378,24 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.fromLTRB(20, 5, 20, 20),
-                            child: Text(widget.ChallanDetails.toString(),style: MyText.subhead(context)!.copyWith(color: MyColors.grey_80)),
+                            child: Text(widget.ChallanDetails.toString(),
+                                style: MyText.subhead(context)!
+                                    .copyWith(color: MyColors.grey_80)),
                           ),
                           Divider(height: 0),
                           Row(
                             children: <Widget>[
                               Spacer(),
                               TextButton(
-                                style: TextButton.styleFrom(primary: Colors.transparent),
-                                child: Text("HIDE", style: TextStyle(color: Colors.grey[800]),),
-                                onPressed: (){togglePanel1();},
+                                style: TextButton.styleFrom(
+                                    primary: Colors.transparent),
+                                child: Text(
+                                  "HIDE",
+                                  style: TextStyle(color: Colors.grey[800]),
+                                ),
+                                onPressed: () {
+                                  togglePanel1();
+                                },
                               ),
                             ],
                           )
@@ -373,54 +406,38 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
                 ),
               ),
             ),
-
             Container(height: 10),
             Padding(
               padding: EdgeInsets.fromLTRB(30, 40, 30, 50),
               child: Column(
-              children:
-              <Widget>[
-                MaterialButton(
-                  onPressed: (){
-
-                  },
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  minWidth: MediaQuery.of(context).size.width * 0.65,
-
-                  color: const Color(0xffAFE1AF),
-                  child: const Text(
-                    'Payment',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreenOTP()));
+                    },
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    minWidth: MediaQuery.of(context).size.width * 0.65,
+                    color: Color(0xff152e57),
+                    child: const Text(
+                      'Payment',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
                   ),
-                ),
-                Container(height: 10),
-                MaterialButton(
-                  onPressed: (){
-
-                  },
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  minWidth: MediaQuery.of(context).size.width * 0.65,
-                                    color: const Color(0xffAFE1AF),
-                  child:
-                  const Text(
-                    'Add to BackLog',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-
-                ),
-              ],
+                  Container(height: 10),
+                ],
               ),
             )
-
           ],
         ),
       ),
     );
   }
 
-
-  void togglePanel1(){
-    if(!expand1){
+  void togglePanel1() {
+    if (!expand1) {
       controller1.forward();
     } else {
       controller1.reverse();
@@ -428,8 +445,8 @@ class ChallanScreenState extends State<ChallanScreen> with TickerProviderStateMi
     expand1 = !expand1;
   }
 
-  void togglePanel2(){
-    if(!expand2){
+  void togglePanel2() {
+    if (!expand2) {
       controller2.forward();
     } else {
       controller2.reverse();

@@ -78,7 +78,7 @@ class _DriversTableState extends State<DriversTable> {
       child: Align(
         alignment: Alignment.topRight,
         child: Chip(
-          backgroundColor: Color(0xb00b679b),
+          backgroundColor: Color(0xff152e57),
           label: Text(
             "Add New Driver",
             style: TextStyle(color: Colors.white,),

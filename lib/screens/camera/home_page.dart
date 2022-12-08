@@ -2,7 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_survilence_system/model/driver_model.dart';
+import 'package:fyp_survilence_system/screens/Challan/DriversChallanHistory_from_Drivers.dart';
+import 'package:fyp_survilence_system/screens/Challan/DriversChallanHistory_from_Drivers_side.dart';
 import 'package:fyp_survilence_system/screens/Notifications/DriverScheduleNotifictaion.dart';
+import 'package:fyp_survilence_system/screens/Notifications/NotificationListScreen_for%20driver.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/screens/home_screen(admin)/nav_bar.dart';
 import 'package:fyp_survilence_system/screens/camera/detect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -197,7 +200,7 @@ class _HomePageState extends State<HomePage> {
   }*/
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
           elevation: 1,
@@ -265,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (_) => CameraPage(
-                                                    cameras: value))));
+                                                    cameras: value, username:loggedInUser.name))));
                                   },
                                 )),
                             Container(height: 18),
@@ -297,8 +300,19 @@ class _HomePageState extends State<HomePage> {
                           children: <Widget>[
                             Padding(
                                 padding: EdgeInsets.only(left: 8, right: 20),
-                                child: Icon(Icons.history,
-                                    size: 52, color: Colors.indigo[500])),
+                                child:IconButton(
+                                  icon: Icon(Icons.history,
+                                      size: 45, color: Colors.indigo[500]),
+                                  onPressed: () => {
+                                    //
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DriverChallanHistoryfromDriverSide())),
+                                  },
+                                )),
+
                             Container(height: 14),
                             Padding(
                                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -342,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) =>
+                                            builder: (context) =>
                                                 DriverScheduleNotification())),
                                   },
                                 )),
@@ -554,7 +568,7 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => DriverMessageScreen())),
+                                            builder: (_) => AllNotificationsForDriver())),
                                   },
                                 )),
                             Container(height: 18),

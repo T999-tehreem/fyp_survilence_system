@@ -4,6 +4,7 @@ import 'package:fyp_survilence_system/model/driver_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_survilence_system/model/policeofficer_model.dart';
+import 'package:fyp_survilence_system/screens/Challan/DriverChallanDetails.dart';
 import 'package:fyp_survilence_system/screens/admin_dashboard/constants.dart';
 import '../../../../services/database.dart';
 import '../../../../utils/color.dart';
@@ -149,7 +150,16 @@ class _CompanyChallanScreenState extends State<CompanyChallanScreen> {
                                             ),),
                                           GestureDetector(
                                             onTap: () {
-
+                                              Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context)=>ChallanDetailsScreen(
+                                                      vehicleNo: streamSnapshot.data?.docs[index]['challan_vehicle_no'],
+                                                      name: streamSnapshot.data?.docs[index]['challan_driver_name'],
+                                                      rank: streamSnapshot.data?.docs[index]['challan_driver_rank'],
+                                                      challan_description: streamSnapshot.data?.docs[index]['challan_description'],
+                                                      challan_no: streamSnapshot.data?.docs[index]['Challan_no'],
+                                                      challan_time: streamSnapshot.data?.docs[index]['challan_time'],
+                                                      challan_type: streamSnapshot.data?.docs[index]['challan_type'],
+                                                      fine: streamSnapshot.data?.docs[index]['challan_fine'])));
 
                                             },
                                             child: Container(

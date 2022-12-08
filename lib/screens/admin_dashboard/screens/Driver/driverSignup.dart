@@ -85,7 +85,7 @@ class driverSignupState extends State<driverSignup> {
                         _getFromGallery();
                       },
                       child: Column(children: [
-                        imageFile==null? Icon(Icons.person, size: 35) :ClipRRect(
+                        imageFile==null? Icon(Icons.person, size: 35, color: Colors.black,) :ClipRRect(
                           borderRadius: BorderRadius.circular(500.0),
                           child: Image.file(
                             imageFile!,
@@ -146,12 +146,12 @@ class driverSignupState extends State<driverSignup> {
         Align(
           alignment: Alignment.center,
           child: MaterialButton(
-            onPressed: () async {await signUp(Email.text,Password.text);},
+            onPressed: () {signUp(Email.text,Password.text);},
             height: MediaQuery.of(context).size.height * 0.05,
             minWidth: MediaQuery.of(context).size.width * 0.1,
             shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(25.0),),
-            color: Color(0xb00b679b),
+            color: Color(0xff152e57),
             child: const Text(
               'Submit',
               style: TextStyle(color: Colors.white, fontSize: 15),
@@ -171,9 +171,11 @@ class driverSignupState extends State<driverSignup> {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
           hintText: '$hinttext',  hintStyle: TextStyle(fontSize: 15, color: Colors.black38),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(10),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.black,
+              width: 1.0,
             ),
           ),
         ),
@@ -183,8 +185,8 @@ class driverSignupState extends State<driverSignup> {
 
     await _auth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) async =>
-    { await postDetailsToFirestore(),
+        .then((value) =>
+    { postDetailsToFirestore(),
     })
         .catchError((e) {
       Fluttertoast.showToast(msg:e.toString().split("]")[1]);
@@ -213,7 +215,7 @@ class driverSignupState extends State<driverSignup> {
         .set(driverModel.toMapDriver());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const DriversTable()));
+        MaterialPageRoute(builder: (context) => Login()));
   }
   //Get from gallery
    File? imageFile;

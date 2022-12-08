@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:fyp_survilence_system/model/driver_model.dart';
 import 'package:fyp_survilence_system/screens/help_and_guide/AskaQuestion.dart';
 import 'package:fyp_survilence_system/screens/help_and_guide/FAQ.dart';
+import 'package:fyp_survilence_system/screens/welcome_screen.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,7 @@ class SettingProfileRouteState extends State<SettingProfileRoute> {
                 expandedHeight: 180.0,
                 floating: false,
                 pinned: true,
-                backgroundColor: Color(0xb00b679b),
+                backgroundColor: Color(0xb00d4d79),
                 flexibleSpace: FlexibleSpaceBar(),
                 bottom: PreferredSize(
                     child: Container(
@@ -413,6 +414,25 @@ class SettingProfileRouteState extends State<SettingProfileRoute> {
                           padding:
                           EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                           child: Text("User Manual",
+                              style: MyText.medium(context)
+                                  .copyWith(color: MyColors.grey_80)),
+                        ),
+                      ),
+                      Divider(height: 0),
+                      InkWell(
+                        highlightColor: Colors.grey.withOpacity(0.1),
+                        splashColor: Colors.grey.withOpacity(0.1),
+                        onTap: () async{
+
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=> FooPage()));
+
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                          child: Text("Logout",
                               style: MyText.medium(context)
                                   .copyWith(color: MyColors.grey_80)),
                         ),

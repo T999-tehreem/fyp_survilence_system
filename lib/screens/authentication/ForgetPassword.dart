@@ -103,7 +103,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         minWidth: MediaQuery.of(context).size.width * 0.1,
         shape: RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(25.0),),
-        color: Color(0xb00b679b),
+        color: Color(0xff152e57),
         child: const Text(
           'Send',
           style: TextStyle(color: Colors.white),

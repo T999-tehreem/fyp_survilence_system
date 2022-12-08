@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'my_toast.dart';
 
 class MyColors {
@@ -9,7 +8,6 @@ class MyColors {
   static const Color accent = Color(0xFFFF4081);
   static const Color accentDark = Color(0xFFF50057);
   static const Color accentLight = Color(0xFFFF80AB);
-
   static const Color grey_3 = Color(0xFFf7f7f7);
   static const Color grey_5 = Color(0xFFf2f2f2);
   static const Color grey_10 = Color(0xFFe6e6e6);
@@ -116,7 +114,7 @@ class CommonAppBar {
 
   static Widget getPrimarySettingAppbar(BuildContext context, String title, { bool light = false }){
     return AppBar(
-      backgroundColor: light ?  Color(0xffAFE1AF) :  Color(0xffAFE1AF),
+      backgroundColor: light ?  Color(0xb00d4d79) :  Color(0xb00d4d79),
       brightness: Brightness.dark, titleSpacing: 0,
       iconTheme: IconThemeData(color: light ? MyColors.grey_60 : Colors.white),
       title: Text(title, style: MyText.title(context)!.copyWith(
@@ -134,7 +132,7 @@ class CommonAppBar {
 
   static Widget getPrimaryBackAppbar(BuildContext context, String title){
     return AppBar(
-      backgroundColor:  Color(0xffAFE1AF),
+      backgroundColor:  Color(0xb00d4d79),
       title: Text(title,),
       leading: IconButton(
         icon: Icon(Icons.arrow_back),

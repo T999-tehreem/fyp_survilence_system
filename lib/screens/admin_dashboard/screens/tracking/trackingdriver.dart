@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TrackDriver extends StatefulWidget {
   var data;
@@ -88,13 +89,14 @@ print("the id is ${widget.data.id}");
                   print("im changing ${currentLocation.latitude}");
                   print(currentLocation.latitude);
 
-                  // await FirebaseFirestore.instance
-                  //     .collection('routes')
-                  //     .doc('uoM1lVaRcyixXgDdBnIU')
-                  //     .update({
-                  //   'lat': currentLocation.latitude,
-                  //   'lng': currentLocation.longitude
-                  // });
+                   await FirebaseFirestore.instance
+                   .collection('routes')
+                   .doc(FirebaseAuth.instance.currentUser!.uid.toString())
+
+                   .update({
+                   'lat': currentLocation.latitude,
+                'lng': currentLocation.longitude
+                  });
 
                   isdriving = true;
                   setState(() {});

@@ -3,7 +3,6 @@ import 'package:fyp_survilence_system/screens/admin_dashboard/constants.dart';
 import 'DriverChatListforAdmin.dart';
 import 'OfficerChatListforAdmin.dart';
 
-
 class TopNavBar extends StatefulWidget {
   const TopNavBar ({Key? key}) : super(key: key);
 
@@ -27,7 +26,7 @@ class _TopNavBarState extends State<TopNavBar>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xb00b679b),
+        backgroundColor: Color(0xb00d4d79),
         title: Text('Chat', style: TextStyle(fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,

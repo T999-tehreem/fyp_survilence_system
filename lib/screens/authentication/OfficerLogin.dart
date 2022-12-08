@@ -92,7 +92,7 @@ class _OfficerLoginState extends State<OfficerLogin> {
             minWidth: MediaQuery.of(context).size.width * 0.78,
             shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(25.0),),
-            color: Color(0xB00B679B),
+            color: Color(0xff152e57),
             child: const Text(
               'Login',
               style: TextStyle(color: Colors.white),

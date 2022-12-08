@@ -58,10 +58,9 @@ class _AdminDriverListForTrackingState extends State<AdminDriverListForTracking>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xb00b679b),
-        centerTitle: true,
+        backgroundColor: Color(0xb00d4d79),
         title: const Text(
           'Track Drivers',
         ),
@@ -97,12 +96,12 @@ class _AdminDriverListForTrackingState extends State<AdminDriverListForTracking>
 
                         return  GestureDetector(
                           onTap: (){
-
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminTrackDriver(data:data)));
                           },
                           child: Accordion(
-                            title: '${data['startlocation']}',
-                            content:'${data['destinationlocation']}',
+
+                            title: 'Driver ID: ${data['driverid']}                    Vehicle no: ${data['vehicleno']}',
+                            content:'${data['startlocation']}---->${data['destinationlocation']}',
                           ),
                         );
                       })
